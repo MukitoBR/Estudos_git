@@ -1,0 +1,37 @@
+#from this import s
+from urllib import response
+import requests
+from bs4 import BeautifulSoup
+
+url_base = 'https://lista.mercadolivre.com.br/'
+
+produto_nome = input('Digite o produto: ')
+
+response = requests.get(url_base + produto_nome)
+
+
+site = BeautifulSoup(response.text, 'html.parser')
+# andes-card andes-card--flat andes-card--default ui-search-result shops__cardStyles ui-search-result--core andes-card--padding-default
+#print(url_base)
+#print(response.text)
+produtos = site.findAll('div', attrs={'class': 'andes-card andes-card--flat andes-card--default ui-search-result shops__cardStyles ui-search-result--core andes-card--padding-default'})
+
+for produto in produtos:
+    titulo = produto.find('div', attrs={'class': 'ui-search-item__group ui-search-item__group--title shops__items-group'})
+
+    link = produto.find('a', attrs={'class': 'ui-search-item__group__element shops-custom-secondary-font ui-search-link'})
+
+    real = produto.find('span', attrs={'price-tag-fraction'})
+    centavos = produto.find('span', attrs={'price-tag-cents'})
+
+    frete = produto.find('div', attrs ={'class': 'ui-search-item__group__element ui-search-item__group__element--shipping shops-custom-secondary-font'})
+
+    #print(produto.prettify())
+    print('Titulo do produto: ', titulo.text)
+    print('Preço do produto: R$', real.text + ',' + centavos.text)
+    print('link do produto: ', link['href'])
+    #print('>>> ', frete.text)
+
+    print('\n\n')
+
+
